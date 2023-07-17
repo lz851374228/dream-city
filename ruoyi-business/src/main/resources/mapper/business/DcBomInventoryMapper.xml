@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.DcBomInventoryMapper">
+    
+    <resultMap type="DcBomInventory" id="DcBomInventoryResult">
+        <result property="inventoryId"    column="inventory_id"    />
+        <result property="bomId"    column="bom_id"    />
+        <result property="bomName"    column="bom_name"    />
+        <result property="inventoryNumber"    column="inventory_number"    />
+        <result property="inventoryNumberLock"    column="inventory_number_lock"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDcBomInventoryVo">
+        select inventory_id, bom_id, bom_name, inventory_number, inventory_number_lock, create_by, create_time, update_by, update_time from dc_bom_inventory
+    </sql>
+
+    <select id="selectDcBomInventoryList" parameterType="DcBomInventory" resultMap="DcBomInventoryResult">
+        <include refid="selectDcBomInventoryVo"/>
+        <where>  
+            <if test="bomId != null "> and bom_id = #{bomId}</if>
+            <if test="bomName != null  and bomName != ''"> and bom_name like concat('%', #{bomName}, '%')</if>
+            <if test="inventoryNumber != null "> and inventory_number = #{inventoryNumber}</if>
+            <if test="inventoryNumberLock != null "> and inventory_number_lock = #{inventoryNumberLock}</if>
+        </where>
+    </select>
+    
+    <select id="selectDcBomInventoryByInventoryId" parameterType="Long" resultMap="DcBomInventoryResult">
+        <include refid="selectDcBomInventoryVo"/>
+        where inventory_id = #{inventoryId}
+    </select>
+        
+    <insert id="insertDcBomInventory" parameterType="DcBomInventory" useGeneratedKeys="true" keyProperty="inventoryId">
+        insert into dc_bom_inventory
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bomId != null">bom_id,</if>
+            <if test="bomName != null and bomName != ''">bom_name,</if>
+            <if test="inventoryNumber != null">inventory_number,</if>
+            <if test="inventoryNumberLock != null">inventory_number_lock,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bomId != null">#{bomId},</if>
+            <if test="bomName != null and bomName != ''">#{bomName},</if>
+            <if test="inventoryNumber != null">#{inventoryNumber},</if>
+            <if test="inventoryNumberLock != null">#{inventoryNumberLock},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDcBomInventory" parameterType="DcBomInventory">
+        update dc_bom_inventory
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bomId != null">bom_id = #{bomId},</if>
+            <if test="bomName != null and bomName != ''">bom_name = #{bomName},</if>
+            <if test="inventoryNumber != null">inventory_number = #{inventoryNumber},</if>
+            <if test="inventoryNumberLock != null">inventory_number_lock = #{inventoryNumberLock},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where inventory_id = #{inventoryId}
+    </update>
+
+    <delete id="deleteDcBomInventoryByInventoryId" parameterType="Long">
+        delete from dc_bom_inventory where inventory_id = #{inventoryId}
+    </delete>
+
+    <delete id="deleteDcBomInventoryByInventoryIds" parameterType="String">
+        delete from dc_bom_inventory where inventory_id in 
+        <foreach item="inventoryId" collection="array" open="(" separator="," close=")">
+            #{inventoryId}
+        </foreach>
+    </delete>
+</mapper>

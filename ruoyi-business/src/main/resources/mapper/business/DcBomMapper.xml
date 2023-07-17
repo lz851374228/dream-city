@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.DcBomMapper">
+    
+    <resultMap type="DcBom" id="DcBomResult">
+        <result property="bomId"    column="bom_id"    />
+        <result property="bomName"    column="bom_name"    />
+        <result property="bomTime"    column="bom_time"    />
+        <result property="isNeedBom"    column="is_need_bom"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDcBomVo">
+        select bom_id, bom_name, bom_time, is_need_bom, create_by, create_time, update_by, update_time from dc_bom
+    </sql>
+
+    <select id="selectDcBomList" parameterType="DcBom" resultMap="DcBomResult">
+        <include refid="selectDcBomVo"/>
+        <where>  
+            <if test="bomName != null  and bomName != ''"> and bom_name like concat('%', #{bomName}, '%')</if>
+            <if test="bomTime != null "> and bom_time = #{bomTime}</if>
+            <if test="isNeedBom != null  and isNeedBom != ''"> and is_need_bom = #{isNeedBom}</if>
+        </where>
+    </select>
+    
+    <select id="selectDcBomByBomId" parameterType="Long" resultMap="DcBomResult">
+        <include refid="selectDcBomVo"/>
+        where bom_id = #{bomId}
+    </select>
+        
+    <insert id="insertDcBom" parameterType="DcBom" useGeneratedKeys="true" keyProperty="bomId">
+        insert into dc_bom
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bomName != null and bomName != ''">bom_name,</if>
+            <if test="bomTime != null">bom_time,</if>
+            <if test="isNeedBom != null and isNeedBom != ''">is_need_bom,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bomName != null and bomName != ''">#{bomName},</if>
+            <if test="bomTime != null">#{bomTime},</if>
+            <if test="isNeedBom != null and isNeedBom != ''">#{isNeedBom},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDcBom" parameterType="DcBom">
+        update dc_bom
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bomName != null and bomName != ''">bom_name = #{bomName},</if>
+            <if test="bomTime != null">bom_time = #{bomTime},</if>
+            <if test="isNeedBom != null and isNeedBom != ''">is_need_bom = #{isNeedBom},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where bom_id = #{bomId}
+    </update>
+
+    <delete id="deleteDcBomByBomId" parameterType="Long">
+        delete from dc_bom where bom_id = #{bomId}
+    </delete>
+
+    <delete id="deleteDcBomByBomIds" parameterType="String">
+        delete from dc_bom where bom_id in 
+        <foreach item="bomId" collection="array" open="(" separator="," close=")">
+            #{bomId}
+        </foreach>
+    </delete>
+</mapper>

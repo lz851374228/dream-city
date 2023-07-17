@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.DcOrderBomRelateMapper">
+    
+    <resultMap type="DcOrderBomRelate" id="DcOrderBomRelateResult">
+        <result property="orderBomRelateId"    column="order_bom_relate_id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="bomId"    column="bom_id"    />
+        <result property="bomName"    column="bom_name"    />
+        <result property="bomNumber"    column="bom_number"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDcOrderBomRelateVo">
+        select order_bom_relate_id, order_id, bom_id, bom_name, bom_number, create_by, create_time, update_by, update_time from dc_order_bom_relate
+    </sql>
+
+    <select id="selectDcOrderBomRelateList" parameterType="DcOrderBomRelate" resultMap="DcOrderBomRelateResult">
+        <include refid="selectDcOrderBomRelateVo"/>
+        <where>  
+            <if test="orderId != null "> and order_id = #{orderId}</if>
+            <if test="bomId != null "> and bom_id = #{bomId}</if>
+            <if test="bomName != null  and bomName != ''"> and bom_name like concat('%', #{bomName}, '%')</if>
+            <if test="bomNumber != null "> and bom_number = #{bomNumber}</if>
+        </where>
+    </select>
+    
+    <select id="selectDcOrderBomRelateByOrderBomRelateId" parameterType="Long" resultMap="DcOrderBomRelateResult">
+        <include refid="selectDcOrderBomRelateVo"/>
+        where order_bom_relate_id = #{orderBomRelateId}
+    </select>
+        
+    <insert id="insertDcOrderBomRelate" parameterType="DcOrderBomRelate" useGeneratedKeys="true" keyProperty="orderBomRelateId">
+        insert into dc_order_bom_relate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">order_id,</if>
+            <if test="bomId != null">bom_id,</if>
+            <if test="bomName != null and bomName != ''">bom_name,</if>
+            <if test="bomNumber != null">bom_number,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">#{orderId},</if>
+            <if test="bomId != null">#{bomId},</if>
+            <if test="bomName != null and bomName != ''">#{bomName},</if>
+            <if test="bomNumber != null">#{bomNumber},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDcOrderBomRelate" parameterType="DcOrderBomRelate">
+        update dc_order_bom_relate
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="bomId != null">bom_id = #{bomId},</if>
+            <if test="bomName != null and bomName != ''">bom_name = #{bomName},</if>
+            <if test="bomNumber != null">bom_number = #{bomNumber},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where order_bom_relate_id = #{orderBomRelateId}
+    </update>
+
+    <delete id="deleteDcOrderBomRelateByOrderBomRelateId" parameterType="Long">
+        delete from dc_order_bom_relate where order_bom_relate_id = #{orderBomRelateId}
+    </delete>
+
+    <delete id="deleteDcOrderBomRelateByOrderBomRelateIds" parameterType="String">
+        delete from dc_order_bom_relate where order_bom_relate_id in 
+        <foreach item="orderBomRelateId" collection="array" open="(" separator="," close=")">
+            #{orderBomRelateId}
+        </foreach>
+    </delete>
+</mapper>
